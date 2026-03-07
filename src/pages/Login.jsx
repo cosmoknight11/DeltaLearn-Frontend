@@ -9,7 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const [step, setStep] = useState("email"); // "email" | "otp"
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("dl_email") || "");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

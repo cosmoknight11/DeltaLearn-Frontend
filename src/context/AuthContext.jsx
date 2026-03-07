@@ -37,6 +37,7 @@ export function AuthProvider({ children }) {
     const { data } = await authApi.verifyOTP(email, code);
     localStorage.setItem("dl_access", data.access);
     localStorage.setItem("dl_refresh", data.refresh);
+    localStorage.setItem("dl_email", email);
     await fetchProfile();
     return data;
   };

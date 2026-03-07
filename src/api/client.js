@@ -33,7 +33,7 @@ api.interceptors.response.use(
         } catch {
           localStorage.removeItem("dl_access");
           localStorage.removeItem("dl_refresh");
-          window.location.hash = "#/login";
+          window.location.href = "/login";
         }
       }
     }
