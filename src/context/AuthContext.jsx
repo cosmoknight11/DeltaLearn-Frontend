@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import axios from "axios";
 import { auth as authApi } from "../api/endpoints";
 
 const AuthContext = createContext(null);
@@ -10,16 +11,33 @@ export function AuthProvider({ children }) {
   const fetchProfile = useCallback(async () => {
     const token = localStorage.getItem("dl_access");
     if (!token) {
-      setLoading(false);
-      return;
+      // No access token — try refresh token before giving up
+      const refresh = localStorage.getItem("dl_refresh");
+      if (!refresh) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const baseURL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+        const { data } = await axios.post(`${baseURL}/auth/refresh/`, { refresh });
+        localStorage.setItem("dl_access", data.access);
+        if (data.refresh) localStorage.setItem("dl_refresh", data.refresh);
+      } catch {
+        localStorage.removeItem("dl_refresh");
+        setLoading(false);
+        return;
+      }
     }
     try {
       const { data } = await authApi.profile();
       setUser(data);
-    } catch {
-      localStorage.removeItem("dl_access");
-      localStorage.removeItem("dl_refresh");
-      setUser(null);
+    } catch (err) {
+      // Only log out on explicit 401 — not on network errors or server hiccups
+      if (err.response?.status === 401) {
+        localStorage.removeItem("dl_access");
+        localStorage.removeItem("dl_refresh");
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
