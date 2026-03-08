@@ -70,8 +70,8 @@ export default function Login() {
           </h2>
           <p className="text-muted small">
             {step === "email"
-              ? "Enter your email to get started"
-              : `We sent a code to ${email}`}
+              ? "Your daily 10-minute learning habit starts here"
+              : `Check your inbox — we sent a code to ${email}`}
           </p>
         </div>
 
@@ -160,7 +160,7 @@ export default function Login() {
         </Card>
 
         <p className="text-center text-muted mt-3 small">
-          No password needed — we&apos;ll email you a code every time.
+          No password needed — one code, and you&apos;re in.
         </p>
       </div>
     </Container>
